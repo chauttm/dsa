@@ -1,9 +1,6 @@
 import java.io.IOException;
 import java.util.Scanner;
 
-/**
- * Created by Tmct on 11/17/2018.
- */
 public class ConnectedCells {
     // Complete the connectedCell function below.
     static int connectedCell(int[][] matrix) {

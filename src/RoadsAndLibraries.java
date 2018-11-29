@@ -6,9 +6,6 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.regex.*;
 
-/**
- * Created by Tmct on 11/12/2018.
- */
 public class RoadsAndLibraries {
     // Complete the roadsAndLibraries function below.
 
