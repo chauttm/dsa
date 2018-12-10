@@ -10,7 +10,7 @@ public class RoadsAndLibraries {
     // Complete the roadsAndLibraries function below.
 
 
-    static long uf_roadsAndLibraries(int n, int c_lib, int c_road, int[][] cities) {
+    static long roadsAndLibraries(int n, int c_lib, int c_road, int[][] cities) {
         if (c_lib < c_road) return (long)c_lib * n;
 
         int id[] = new int[n+1];
