@@ -37,12 +37,48 @@ public class TwoFourTree {
         return node;
     }
 
+
+
     public void print() {
         root.print();
         System.out.print("\n");
     }
 
     static final int MAX_KEYS = 3;
+
+    public void delete(int key) {
+        if (root != null) root = delete(key, root);
+    }
+
+    private Node delete(int key, Node node) {
+        int i = 0;
+        while (i < node.keys && key > node.key[i]) i++;
+        if (key == node.key[i]) {
+            if (node.isLeaf) {
+                node.delete(i);
+            }
+            else {
+                int nextKey = findMin(node.child[i]);
+
+            }
+        }
+
+
+        else {
+
+            int i = 0;
+            while (i < node.keys && key > node.key[i]) i++;
+            Node temp = delete(key, node.child[i]);
+            if (temp != node.child[i]) {    //
+                node.insert(temp.key[0], temp.value[0]);
+                node.child[i] = temp.child[0];
+                node.child[i + 1] = temp.child[1];
+            }
+        }
+        if (node.keys == 0) return node.split();
+        return node;
+    }
+
     public static class Node {
         Node child[] = new Node[MAX_KEYS + 2];
         int key[] = new int[MAX_KEYS + 1];
@@ -80,8 +116,8 @@ public class TwoFourTree {
         public Node split() {
             int mid = keys/2;
             Node parent = new Node(key[mid], value[mid]);
-            parent.isLeaf = false;
             Node right = new Node();
+            right.isLeaf = isLeaf;
             right.keys = keys - mid - 1;
             for (int i = mid + 1; i < keys; i++) {
                 right.key[i - mid - 1] = key[i];
@@ -90,7 +126,10 @@ public class TwoFourTree {
                 value[i] = null;
                 child[i + 1] = null;
             }
+            right.child[0] = child[mid+1];
+
             this.keys = mid;
+            parent.isLeaf = false;
             parent.child[0] = this;
             parent.child[1] = right;
             return parent;
@@ -104,6 +143,19 @@ public class TwoFourTree {
             }
             if (!isLeaf) child[keys].print();
             System.out.print(")");
+        }
+
+        public void delete(int toDelete)
+        {
+            int i = 0;
+            while (i < keys && toDelete > key[i]) i++;
+            if (key[i] == toDelete) {
+                for (; i < keys-1; i++) {
+                    key[i] = key[i+1];
+                    value[i] = value[i+1];
+                }
+                keys--;
+            }
         }
     }
 
