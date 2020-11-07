@@ -1,24 +1,22 @@
-package dsa;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class BinaryTree implements Iterable<String> {
-    public Node root;
+public class BinaryTree<Key> implements Iterable<Key> {
+    public Node<Key> root;
 
     @Override
-    public Iterator<String> iterator() {
-        return new InOrderIterator();  //To change body of implemented methods use File | Settings | File Templates.
+    public Iterator<Key> iterator() {
+        return new InOrderIterator();
     }
 
-    public Iterator<String> getPreOrderIterator() {
+    public Iterator<Key> getPreOrderIterator() {
         return new PreOrderIterator();
     }
 
-    class InOrderIterator implements Iterator<String> {
-        List<String> keys = new ArrayList<>();
-        Iterator<String> iterator;
+    class InOrderIterator implements Iterator<Key> {
+        List<Key> keys = new ArrayList<>();
+        Iterator<Key> iterator;
 
         public InOrderIterator() {
             getKeysByInOrderTraversal(root, keys);
@@ -31,14 +29,14 @@ public class BinaryTree implements Iterable<String> {
         }
 
         @Override
-        public String next() {
+        public Key next() {
             return iterator.next();
         }
     }
 
-    class PreOrderIterator implements Iterator<String> {
-        List<String> keys = new ArrayList<>();
-        Iterator<String> iterator;
+    class PreOrderIterator implements Iterator<Key> {
+        List<Key> keys = new ArrayList<>();
+        Iterator<Key> iterator;
 
         public PreOrderIterator() {
             getKeysByPreOrderTraversal(root, keys);
@@ -51,50 +49,84 @@ public class BinaryTree implements Iterable<String> {
         }
 
         @Override
-        public String next() {
+        public Key next() {
             return iterator.next();
+        }
+
+        private void getKeysByPreOrderTraversal(Node<Key> node, List<Key> keys) {
+            if (node == null) return;
+            keys.add(node.key);
+            getKeysByInOrderTraversal(node.left, keys);
+            getKeysByInOrderTraversal(node.right, keys);
         }
     }
 
-    private void getKeysByPreOrderTraversal(Node node, List<String> keys) {
-        if (node == null) return;
-        keys.add(node.key);
-        getKeysByInOrderTraversal(node.left, keys);
-        getKeysByInOrderTraversal(node.right, keys);
-    }
-
-    private void getKeysByInOrderTraversal(Node node, List<String> keys) {
+    private void getKeysByInOrderTraversal(Node<Key> node, List<Key> keys) {
         if (node == null) return;
         getKeysByInOrderTraversal(node.left, keys);
         keys.add(node.key);
         getKeysByInOrderTraversal(node.right, keys);
     }
 
-    static class Node {
-        private final String key;
-        private Node left, right;
-        public Node(String key) {
+    static class Node<Key> {
+        private final Key key;
+        private Node<Key> left, right;
+        public Node(Key key) {
             this.key = key;
         }
 
-        public Node(String key, Node left, Node right) {
+        public Node(Key key, Node<Key> left, Node<Key> right) {
             this(key);
             this.left = left;
             this.right = right;
         }
+
+        public String toString() {
+            return key.toString();
+        }
     }
+
+    private void inOrderPrint() {
+        inOrderPrint(root);
+    }
+
+    private void inOrderPrint(Node<Key> node) {
+        if (node==null) return;
+        inOrderPrint(node.left);
+        System.out.print(node.key + " ");
+        inOrderPrint(node.right);
+    }
+
+    private void preOrderPrint() {
+        preOrderPrint(root);
+    }
+
+    private void preOrderPrint(Node<Key> node) {
+        if (node==null) return;
+        System.out.print(node.key + " ");
+        preOrderPrint(node.left);
+        preOrderPrint(node.right);
+    }
+
     public static void main(String[] args) {
-        BinaryTree tree = new BinaryTree();
-        Node d = new Node("D");
-        Node e = new Node("E");
-        Node f = new Node("F");
-        Node g = new Node("G");
-        Node b = new Node("B", d, e);
-        Node c = new Node("C", f, g);
-        tree.root = new Node("A", b, c);
+        BinaryTree<String> tree = new BinaryTree<>();
+        Node<String> d = new Node<>("D");
+        Node<String> e = new Node<>("E");
+        Node<String> f = new Node<>("F");
+        Node<String> g = new Node<>("G");
+        Node<String> b = new Node<>("B", d, e);
+        Node<String> c = new Node<>("C", f, g);
+        tree.root = new Node<>("A", b, c);
+
+        System.out.println("Size: " + tree.size());
+
+        System.out.println("Height: " + tree.height());
+
+        System.out.println("Find d: "+ tree.find("D"));
+        System.out.println("Find z: "+ tree.find("Z"));
 
         //tree.preOrderPrint(); //A B D E C F G
-        //tree.preOrderPrint(); //D B E A F C G
+        //tree.inOrderPrint(); //D B E A F C G
         System.out.println("---- iterator: ");
         for (String key: tree) {        //D B E A F C G
             System.out.print(key + " ");
@@ -110,25 +142,32 @@ public class BinaryTree implements Iterable<String> {
         System.out.print(buf);
     }
 
-    private void inOrderPrint() {
-        inOrderPrint(root);
+    public Node<Key> find(Key key) {
+        return find(key, root);
     }
 
-    private void inOrderPrint(Node node) {
-        if (node==null) return;
-        inOrderPrint(node.left);
-        System.out.print(node.key + " ");
-        inOrderPrint(node.right);
+    private Node<Key> find(Key key, Node<Key> node) {
+        if (node == null) return null;
+        if (node.key.equals(key)) return node;
+        Node<Key> result = find(key, node.left);
+        return result != null ? result : find(key, node.right);
     }
 
-    private void preOrderPrint() {
-        preOrderPrint(root);
+    private int height() {
+        return height(root);
     }
 
-    private void preOrderPrint(Node node) {
-        if (node==null) return;
-        System.out.print(node.key + " ");
-        preOrderPrint(node.left);
-        preOrderPrint(node.right);
+    private int height(Node<Key> node) {
+        if (node == null) return 0;
+        return 1 + Math.max(height(node.left), height(node.right));
+    }
+
+    public int size() {
+        return size(root);
+    }
+
+    private int size(Node<Key> node) {
+        if (node == null) return 0;
+        return size(node.left) + size(node.right) + 1;
     }
 }

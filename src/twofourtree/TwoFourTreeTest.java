@@ -1,3 +1,5 @@
+package twofourtree;
+
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;

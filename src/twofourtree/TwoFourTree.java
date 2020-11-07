@@ -1,3 +1,5 @@
+package twofourtree;
+
 public class TwoFourTree {
     Node root = new Node();
 
@@ -58,7 +60,7 @@ public class TwoFourTree {
                 node.delete(i);
             }
             else {
-                int nextKey = findMin(node.child[i]);
+                //int nextKey = findMin(node.child[i]);
 
             }
         }
@@ -66,7 +68,7 @@ public class TwoFourTree {
 
         else {
 
-            int i = 0;
+            //int i = 0;
             while (i < node.keys && key > node.key[i]) i++;
             Node temp = delete(key, node.child[i]);
             if (temp != node.child[i]) {    //
