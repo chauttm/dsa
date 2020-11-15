@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class AvlTree {
 
-    private Node root;             // root of BST
+    private Node root;             // root of st.BST
 
     private class Node {
         private String key;           // sorted by key
@@ -124,7 +124,7 @@ public class AvlTree {
         return size(root);
     }
 
-    // return number of key-value pairs in BST rooted at x
+    // return number of key-value pairs in st.BST rooted at x
     private int size(Node x) {
         if (x == null) return 0;
         else return x.count;
